@@ -19,7 +19,7 @@ const SongList = () => {
   return (
     <div className="grid grid-cols-4 gap-6 p-5">
       {dummySongs.map((song) => (
-        <div key={song.id} className="relative bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-200">
+        <div key={song.id} className="relative bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
           <div className="bg-gray-600 h-36 flex items-center justify-center">
             <p className="text-gray-400 text-sm">Album Art</p>
           </div>
@@ -29,7 +29,7 @@ const SongList = () => {
             <p className="text-gray-400 text-sm truncate">{song.kemiripan}%</p>
           </div>
 
-          <button className="absolute bottom-5 right-5 bg-white text-gray-800 text-white px-3 py-2 rounded-full hover:bg-green-600 hover:text-white">▶</button>
+          <button className="absolute bottom-5 right-5 bg-white text-green-700 px-3 py-2 rounded-full hover:bg-green-600 hover:text-white">▶</button>
         </div>
       ))}
     </div>
