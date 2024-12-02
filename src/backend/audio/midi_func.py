@@ -53,12 +53,12 @@ def rtb_hist(notes: list):
 def ftb_hist(notes: list):
     '''get histogram of tone difference between note and the first note'''
 
-    rtb_notes = []
+    ftb_notes = []
 
     for i in range(len(notes)):
         diff = notes[i] - notes[0]
-        rtb_notes.append(diff)
+        ftb_notes.append(diff)
 
-    h, bins = np.histogram(a= rtb_notes, bins=np.arange(-127, 127))
+    h, bins = np.histogram(a= ftb_notes, bins=np.arange(-127, 127))
 
     return h, bins
