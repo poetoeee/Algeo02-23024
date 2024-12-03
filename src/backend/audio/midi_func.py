@@ -1,9 +1,5 @@
 from mido import MidiFile, tempo2bpm
 import numpy as np
-import matplotlib.pyplot as plt
-
-
-mid = MidiFile(r"src\backend\audio\database_song\midi_dataset\x (28).mid")
 
 def get_notes(mid: MidiFile) -> list:
     '''get array of notes from midi object'''    
@@ -62,3 +58,14 @@ def ftb_hist(notes: list):
     h, bins = np.histogram(a= ftb_notes, bins=np.arange(-127, 127))
 
     return h, bins
+
+def hist_normalize(notes: list):
+    sum = 0
+    normal = []
+    for note in notes:
+        sum += note
+
+    for note in notes:
+        normal.append((note/sum).item())
+
+    return normal
