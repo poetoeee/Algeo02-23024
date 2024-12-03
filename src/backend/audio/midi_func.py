@@ -1,5 +1,6 @@
 from mido import MidiFile, tempo2bpm
 import numpy as np
+from math import sqrt
 
 def get_notes(mid: MidiFile) -> list:
     '''get array of notes from midi object'''    
@@ -69,3 +70,20 @@ def hist_normalize(notes: list):
         normal.append((note/sum).item())
 
     return normal
+
+def cos_vector(l1: list, l2: list):
+    dot_product = 0
+    norm_l1 = 0
+    norm_l2 = 0
+
+    for i in range(len(l1)):
+        dot_product += l1[i] + l2[i]
+        norm_l1 += l1[i] * l1[i]
+        norm_l2 += l2[i] * l2[i]
+
+    norm_l1 = sqrt(norm_l1)
+    norm_l2 = sqrt(norm_l2)
+
+    print("dot:", dot_product)
+
+    return dot_product/(norm_l1 * norm_l2)
