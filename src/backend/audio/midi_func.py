@@ -11,7 +11,6 @@ def get_notes(mid: MidiFile) -> list:
     notes = []
     for i, track in enumerate(mid.tracks):
         if track.name == "Voice":
-            print(f"Track: {track.name}")
             for msg in track:
                 if msg.type == "note_on" and msg.velocity > 0:
                     notes.append(msg.note)
@@ -33,9 +32,19 @@ def note_normalization(notes: list):
 def atb_hist_count_measure(notes: list):
     '''get histogram of frequency of each tone (note: 0 - 127)'''
     
-    h, bins = np.histogram(notes, bins=np.arange(127))
+    h, bins = np.histogram(notes, bins=np.arange(128))
 
     return h, bins
+
+def atb_hist_time_measure(l: list):
+    '''get atb histogram using time (beat) measure
+    l: list of tuple (note, beat)
+    '''
+    beats = np.zeros(128)
+    for note, beat in l:
+        beats[note] += beat
+    x = np.arange(0, 128)
+    return beats, x
 
 def rtb_hist_count_measure(notes: list):
     '''get histogram of tone difference of each succesive note'''
@@ -100,7 +109,6 @@ def divide_to_beat(midi: MidiFile) -> list:
     beat_count = 0
 
     for track in midi.tracks:
-        print(track.name)
         if track.name == "Voice":
             for msg in track:
                 if msg.type == "note_on":
