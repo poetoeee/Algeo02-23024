@@ -72,12 +72,13 @@ def hist_normalize(notes: list):
     return normal
 
 def cos_vector(l1: list, l2: list):
+    '''get cosinne of two vector with same dimension'''
     dot_product = 0
     norm_l1 = 0
     norm_l2 = 0
 
     for i in range(len(l1)):
-        dot_product += l1[i] + l2[i]
+        dot_product += l1[i] * l2[i]
         norm_l1 += l1[i] * l1[i]
         norm_l2 += l2[i] * l2[i]
 
@@ -87,3 +88,19 @@ def cos_vector(l1: list, l2: list):
     print("dot:", dot_product)
 
     return dot_product/(norm_l1 * norm_l2)
+
+def divide_to_beat(midi: MidiFile):
+    '''Mengembalikan (a, b), dengan a adalah note dan b adalah jumlah beat saat ini dari awal lagu'''
+    
+    '''Beat digitung dengan time / ticks_per_beat (time dihitung dalam satuan ticks)'''
+    res = []
+    beat_count = 0
+
+    for track in midi.tracks:
+        print(track.name)
+        if track.name == "Voice":
+            for msg in track:
+                if msg.type == "note_on":
+                    beat_count += msg.time / midi.ticks_per_beat #msg.time dihitung dalam tick
+                    res.append((msg.note, beat_count))
+    return res
