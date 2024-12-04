@@ -132,8 +132,6 @@ def cos_vector(l1: list, l2: list):
     norm_l1 = sqrt(norm_l1)
     norm_l2 = sqrt(norm_l2)
 
-    print("dot:", dot_product)
-
     return dot_product/(norm_l1 * norm_l2)
 
 def divide_to_beat(midi: MidiFile) -> list:
@@ -142,16 +140,35 @@ def divide_to_beat(midi: MidiFile) -> list:
     '''Beat digitung dengan time / ticks_per_beat (time dihitung dalam satuan ticks)'''
     res = []
     beat_count = 0
-
+    tpb = midi.ticks_per_beat
     for track in midi.tracks:
         if track.name == "Voice":
             for msg in track:
-                if msg.type == "note_on":
-                    beat_count += msg.time / midi.ticks_per_beat #msg.time dihitung dalam tick
-                    res.append((msg.note, beat_count))
+                if msg.type == "note_on" or msg.type == "note_off":
+                    if msg.time > 0:
+                        beat_count = msg.time / tpb #msg.time dihitung dalam tick
+                        res.append((msg.note, beat_count))
     return res
 
-def compare(h1, bins1, h2, bins2):
+def divide_to_segment(events: list):
+    '''Membagi list menjadi beberapa list yang masing masing segmen terdiri dari 20 - 40 beat'''
+
+    res = []
+    temp = []
+    beat_count = 0
+
+    for note, beat in events:
+        if beat_count < 20:
+            temp.append((note, beat))
+            beat_count += beat
+        else:
+            res.append(temp)
+            temp = []
+            beat_count = 0
+        
+    return res
+
+def compare(h1, h2):
     '''
     compare two histogram using cosine
     h1: list of int (histogram 1)
@@ -162,3 +179,13 @@ def compare(h1, bins1, h2, bins2):
 
     cos_res = cos_vector(h1, h2)
     return cos_res
+
+def calculate(mid1: MidiFile, mid2: MidiFile):
+    '''
+    Membandingkan 2 file midi, mid1 sebagai humming, dan mid2 dari database.
+    '''
+
+    event1 = divide_to_beat(mid1)
+    event2 = divide_to_beat(mid2)
+    
+
