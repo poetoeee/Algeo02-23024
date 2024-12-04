@@ -2,6 +2,9 @@ from mido import MidiFile, tempo2bpm
 import numpy as np
 from math import sqrt
 
+
+#(note, beat_length)
+
 def get_notes(mid: MidiFile) -> list:
     '''get array of notes from midi object'''    
     
@@ -27,14 +30,14 @@ def note_normalization(notes: list):
     
     return norm
 
-def atb_hist(notes: list):
+def atb_hist_count_measure(notes: list):
     '''get histogram of frequency of each tone (note: 0 - 127)'''
     
     h, bins = np.histogram(notes, bins=np.arange(127))
 
     return h, bins
 
-def rtb_hist(notes: list):
+def rtb_hist_count_measure(notes: list):
     '''get histogram of tone difference of each succesive note'''
     
     rtb_notes = []
@@ -47,7 +50,7 @@ def rtb_hist(notes: list):
 
     return h, bins
 
-def ftb_hist(notes: list):
+def ftb_hist_count_measure(notes: list):
     '''get histogram of tone difference between note and the first note'''
 
     ftb_notes = []
@@ -89,7 +92,7 @@ def cos_vector(l1: list, l2: list):
 
     return dot_product/(norm_l1 * norm_l2)
 
-def divide_to_beat(midi: MidiFile):
+def divide_to_beat(midi: MidiFile) -> list:
     '''Mengembalikan (a, b), dengan a adalah note dan b adalah jumlah beat saat ini dari awal lagu'''
     
     '''Beat digitung dengan time / ticks_per_beat (time dihitung dalam satuan ticks)'''
@@ -104,3 +107,8 @@ def divide_to_beat(midi: MidiFile):
                     beat_count += msg.time / midi.ticks_per_beat #msg.time dihitung dalam tick
                     res.append((msg.note, beat_count))
     return res
+
+def compare(mid1: MidiFile, mid2: MidiFile):
+    note1 = get_notes(mid1)
+    note2 = get_notes(mid2)
+
