@@ -151,7 +151,14 @@ def divide_to_beat(midi: MidiFile) -> list:
                     res.append((msg.note, beat_count))
     return res
 
-def compare(mid1: MidiFile, mid2: MidiFile):
-    note1 = get_notes(mid1)
-    note2 = get_notes(mid2)
+def compare(h1, bins1, h2, bins2):
+    '''
+    compare two histogram using cosine
+    h1: list of int (histogram 1)
+    bins1: list of int (bins 1)
+    h2: list of int (histogram 2)
+    bins2: list of int (bins 2)
+    '''
 
+    cos_res = cos_vector(h1, h2)
+    return cos_res
