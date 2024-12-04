@@ -75,6 +75,8 @@ def rtb_hist_time_measure(l: list):
     x = np.arange(-127, 127)
 
     return beats, x
+
+
 def ftb_hist_count_measure(notes: list):
     '''get histogram of tone difference between note and the first note'''
 
@@ -87,6 +89,23 @@ def ftb_hist_count_measure(notes: list):
     h, bins = np.histogram(a= ftb_notes, bins=np.arange(-127, 127))
 
     return h, bins
+
+def ftb_hist_time_measure(l: list):
+    '''get histogram of tone difference of each succesive note with beat measure
+    l: list of tuple (note, beat)
+    '''
+    
+    beats = np.zeros(255)
+    a, b = l[0]
+
+    for i in range(len(l)):
+        c, d = l[i]
+        diff  = c - a + 127
+        beats[diff] += d
+
+    x = np.arange(-127, 127)
+
+    return beats, x
 
 def hist_normalize(notes: list):
     sum = 0
