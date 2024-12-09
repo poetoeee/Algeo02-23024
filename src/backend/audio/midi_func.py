@@ -245,7 +245,7 @@ def save_numpy_file():
         
         database[file] = windows
 
-    f = os.path.join(current_directory, "np_database")
+    f = os.path.join(current_directory, "window_database")
     np.save(f, database)
     print("database saved")
 
