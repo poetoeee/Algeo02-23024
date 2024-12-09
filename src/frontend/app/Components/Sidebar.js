@@ -1,48 +1,93 @@
 "use client";
-import { usePathname, useRouter } from "next/navigation"; // Import hooks
+import { useState, useRef } from "react";
 
-const links = [
-  {
-    href: "/upload",
-    label: "Upload",
-  },
-  {
-    href: "/audios",
-    label: "Audios",
-  },
-  {
-    href: "/pictures",
-    label: "Pictures",
-  },
-  {
-    href: "/mapper",
-    label: "Mapper",
-  },
+const uploadOptions = [
+  { type: "Audios", accept: ".zip" },
+  { type: "Pictures", accept: ".zip" },
+  { type: "Mapper", accept: ".txt" },
 ];
 
 const Sidebar = () => {
-  const router = useRouter();
-  const pathname = usePathname();
+  const [selectedFiles, setSelectedFiles] = useState({
+    Audios: "-",
+    Pictures: "-",
+    Mapper: "-",
+  });
+  const [currentUploadType, setCurrentUploadType] = useState(null);
+  const fileInputRef = useRef(null);
 
-  const handleNavigation = (href) => {
-    router.push(href);
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const allowedType = uploadOptions.find((option) => option.type === currentUploadType)?.accept;
+
+    if (allowedType && !file.name.endsWith(allowedType)) {
+      alert(`Invalid file type! Only ${allowedType} files are allowed.`);
+      return;
+    }
+
+    setSelectedFiles((prevFiles) => ({
+      ...prevFiles,
+      [currentUploadType]: file.name,
+    }));
+  };
+
+  const handleUploadClick = (uploadType) => {
+    setCurrentUploadType(uploadType);
+    fileInputRef.current.click();
   };
 
   return (
-    <div className="w-70 h-screen bg-gray-900 text-white p-20">
-      <ul className="list-none flex flex-col text-lg space-y-6">
-        {links.map((link) => (
-          <li key={link.href} className="relative">
-            <button
-              onClick={() => handleNavigation(link.href)}
-              className={`px-10 w-full text-center cursor-pointer font-bold p-3 rounded transition-colors duration-150 ${pathname === link.href ? "bg-gray-700 text-white" : "bg-gray-800 hover:bg-gray-700"}`}
-            >
-              {pathname === link.href && <span className="absolute left-[-16px] top-0 h-full w-2 bg-blue-500 rounded-r"></span>}
-              {link.label}
+    <div className="w-1/5 h-screen bg-gray-900 text-white p-10 flex flex-col">
+      <h1 className="text-5xl font-bold mb-10">HOREG 2.0</h1>
+
+      <div className="bg-gray-800 p-4 rounded mt-10 mb-20">
+        <h3 className="text-lg font-bold mb-3">Upload File</h3>
+
+        {selectedFiles.Upload && selectedFiles.Upload !== "-" && <p className="text-sm text-gray-300 mb-2">{selectedFiles.Upload}</p>}
+
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={(event) => {
+            const file = event.target.files[0];
+            if (file) {
+              setSelectedFiles((prev) => ({
+                ...prev,
+                Upload: file.name,
+              }));
+            }
+          }}
+          className="hidden"
+        />
+
+        <button onClick={() => handleUploadClick("Upload")} className="w-full px-4 py-2 bg-green-700 text-white rounded hover:bg-green-800">
+          Upload
+        </button>
+      </div>
+
+      <ul className="list-none space-y-4 mb-10 mt-20">
+        {uploadOptions.map((option) => (
+          <li key={option.type}>
+            <button onClick={() => handleUploadClick(option.type)} className="w-full text-center px-4 py-2 rounded bg-gray-800 hover:bg-gray-700">
+              {option.type}
             </button>
           </li>
         ))}
       </ul>
+
+      <div className="grid grid-cols-[30%_5%_65%] gap-2">
+        <p className="text-lg font-bold">Audios</p>
+        <p className="text-lg font-bold">:</p>
+        <p className="text-lg font-bold">{selectedFiles.Audios}</p>
+        <p className="text-lg font-bold">Pictures</p>
+        <p className="text-lg font-bold">:</p>
+        <p className="text-lg font-bold">{selectedFiles.Pictures}</p>
+        <p className="text-lg font-bold">Mapper</p>
+        <p className="text-lg font-bold">:</p>
+        <p className="text-lg font-bold">{selectedFiles.Mapper}</p>
+      </div>
     </div>
   );
 };
