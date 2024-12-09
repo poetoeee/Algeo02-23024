@@ -9,7 +9,9 @@ directory_in_str = r"C:\Users\User\Algeo2\Algeo02-23024\src\backend\audio\databa
 
 mid1 = MidiFile(r"src\backend\audio\database_song\midi_dataset\kelas2.mid")#32
 mid2 = MidiFile(r"src\backend\audio\database_song\midi_dataset\x (35).mid")
-print(midi_func.divide_to_beat(mid2))
+
+print(midi_func.calculate_time_measure(mid1, mid2, 0))
+# print(midi_func.divide_to_beat(mid2))
 # event1 = midi_func.divide_to_beat(mid2)
 # print(event1)
 # window1 =   [(64, 0.25), (64, 0.25), (64, 0.25), (65, 0.5), (65, 0.25), (65, 0.25), (64, 0.25), (64, 0.25)]
@@ -38,7 +40,7 @@ print(midi_func.divide_to_beat(mid2))
 #     print(f"Hasil dengan {file} = ", res)
 #     print("time taken: ", time.time() - start)
 
-print("total: ", time.time() - startp)
+# print("total: ", time.time() - startp)
 
 # res = midi_func.calculate(mid1, mid2, 1)
 
