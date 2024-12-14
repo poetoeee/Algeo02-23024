@@ -137,6 +137,9 @@ def cos_vector(l1: list, l2: list):
 
     norm_l1 = sqrt(norm_l1)
     norm_l2 = sqrt(norm_l2)
+    if (norm_l1 * norm_l2 == 0):
+        return 0
+
     return dot_product/(norm_l1 * norm_l2)
 
 def divide_to_beat(midi: MidiFile) -> list:
@@ -201,49 +204,71 @@ def compare(h1, h2):
     return cos_res
 
 
+def create_windows(events):    
+    is_window = False
+    window_size = 20
+    sliding_window = 4    
+    windows = []
+    window = []
+    idx = 0
+    beat_count = 0
+
+    deque_count = 0
+    window = []
+
+    while idx < len(events):
+
+        n, b = events[idx]
+        if not is_window:
+            window.append(events[idx])
+            beat_count += b
+            
+            if beat_count > window_size:
+                is_window = True
+            idx += 1
+
+        else:
+            if window == []:
+                is_window = False
+            else:
+
+                windows.append(window[:])
+                
+                while deque_count < sliding_window:
+                    n, first_beat = window[0]
+                    deque_count += first_beat
+                    beat_count -= first_beat
+                    window.pop(0)
+                    if window == []:
+                        break
+
+                is_window = False
+                deque_count = 0
+    if window != []:
+        windows.append(window[:])
+
+    return windows
+
 def save_numpy_file():
+    '''
+    Membuat file numpy berisikan dict (key= nama lagu, value = array of array of window)
+    '''
     current_directory = os.path.dirname(os.path.realpath(__file__))
     directory_in_str = os.path.join(current_directory, "database_song", "midi_dataset")
-    print(directory_in_str)
     database = {}
 
-    window_size = 4
+    window_size = 20
+    sliding_window = 4
     for file in os.listdir(directory_in_str):
+        print(file)
         filename = os.path.join(directory_in_str, file)
         mid = MidiFile(filename)
         
         events = divide_to_beat(mid)
-        segments = divide_to_segment(events)
 
-        windows = []
-        for segment in segments:
-            beat_count = 0
-            window = []
-            i = 0
-            while i < len(segment):
-                event = segment[i]
-
-                n, b = event
-                if beat_count + b < window_size:
-                    window.append(event)
-                    beat_count += b
-                    i += 1
-                else:
-                    windows.append(window[:])
-                    if window != []:
-                        (a, c) = window[0]
-                        window.pop(0)
-                        beat_count -= c
-                    else:
-                        window.append(event)
-                        beat_count  += b
-                        i+= 1
-
-                    
-            if window != []:
-                windows.append(window[:])
+        windows = create_windows(events)
         
-        database[file] = windows
+        database[file] = windows[:]
 
     f = os.path.join(current_directory, "window_database")
     np.save(f, database)
