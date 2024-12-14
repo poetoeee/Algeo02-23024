@@ -143,7 +143,7 @@ def cos_vector(l1: list, l2: list):
     return dot_product/(norm_l1 * norm_l2)
 
 def divide_to_beat(midi: MidiFile) -> list:
-    '''Mengembalikan (a, b), dengan a adalah note dan b adalah jumlah beat saat ini dari awal lagu'''
+    '''Mengembalikan list of (a, b), dengan a adalah note dan b adalah jumlah beat saat ini dari awal lagu'''
     
     '''Beat digitung dengan time / ticks_per_beat (time dihitung dalam satuan ticks)'''
     res = []
