@@ -91,12 +91,23 @@ def serve_image(filename):
 @app.route("/api/compare_song", methods = ['POST'])
 def compare_song():
     try:
+        hum_folder = os.path.join(r"src\backend\audio\query")
+        os.makedirs(hum_folder, exist_ok=True)
 
         query = request.files.get('file_song')
-        res = handle_query_audio(query.filename)
-
+        
         if not query:
             return jsonify({'error': 'No file uploaded'}), 400
+        
+        query_dir = os.path.join(r"src\backend\audio\query", query.filename)
+
+        query.save(query_dir)
+        
+        res = handle_query_audio(query_dir) 
+        
+        #Sort
+        # sorted_dict = dict(sorted(res.items(), key=lambda item: item[1]))
+
         return jsonify(res)
     
     except Exception as e:
