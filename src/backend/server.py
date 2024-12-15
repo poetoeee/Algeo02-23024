@@ -4,7 +4,7 @@ import os
 import json
 # import zipfile
 # from audio.main import handle_query_audio, procces_audio_db
-
+# from image.integration import handle_query, process_dataset
 
 
 # App instance
@@ -102,7 +102,8 @@ def serve_image(filename):
 # @app.route("/api/upload_song", methods= ["POST"])
 # def procces_song():
 #     try:
-       
+#         temp = os.path.join(r"src\backend\audio\temp")
+#         os.makedirs(temp, exist_ok=True)
 #         uploaded_file = request.files.get('file_song_db')
 
 #         if not uploaded_file:
@@ -137,13 +138,26 @@ def serve_image(filename):
 #         return jsonify({'error' : str(e)}), 500
 
 
-# @app.route("/api/upload_image", methods= ["GET"])
+# @app.route("/api/upload_image", methods= ["POST"])
 # def procces_image():
 #     try:
-#         process_dataset("database_image", "processed_data.npy", )
+#         temp = os.path.join(r"src\backend\image\temp")
+#         os.makedirs(temp, exist_ok=True)
+#         uploaded_file = request.files.get('file_image_db')
+#         if not uploaded_file:
+#             return jsonify({'error': 'No file uploaded'}), 400
+        
+#         zip_path = os.path.join(r"src\backend\image\temp", uploaded_file.filename)
+#         uploaded_file.save(zip_path)
+#         extracted = os.path.join(r"src\backend\image\db_tes")
+#         os.makedirs(extracted, exist_ok=True)
+#         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+#             zip_ref.extractall(extracted)
+#         process_dataset(extracted, "processed_data.npy")
 #         return jsonify({"message": "Image database processed successfully"})
+    
 #     except Exception as e:
-#         return jsonify({'error' : str(e)}), 500
+#         return jsonify({'errornya' : str(e)}), 500
 
 # ---------------------- MAIN ----------------------
 if __name__ == "__main__":
