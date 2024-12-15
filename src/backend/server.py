@@ -193,7 +193,7 @@ def compare_image():
         return jsonify({'error' : str(e)}), 500
 
 
-##Upload image database
+##Upload image database 
 @app.route("/api/upload_image", methods= ["POST"])
 def procces_image():
     try:
