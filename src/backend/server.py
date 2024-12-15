@@ -89,11 +89,10 @@ def serve_image(filename):
     return send_from_directory(IMAGE_FOLDER, filename)
 
 
-##search_button
-@app.route("/api/compare_song", methods = ['POST'])
-def compare_song():
+@app.route("/api/upload_query", methods = ["POST"])
+def upload_query():
     try:
-        hum_folder = os.path.join(r"src\backend\audio\query")
+        hum_folder = os.path.join(r"src\backend\audio", "query")
         os.makedirs(hum_folder, exist_ok=True)
 
         query = request.files.get('file_song')
@@ -104,8 +103,22 @@ def compare_song():
         query_dir = os.path.join(r"src\backend\audio\query", query.filename)
 
         query.save(query_dir)
-        
-        res = handle_query_audio(query_dir) 
+        return jsonify({"message": "Song database processed successfully"})
+
+    except Exception as e:
+        return jsonify({'error' : str(e)}), 500
+
+
+##search song
+@app.route("/api/compare_song", methods = ['POST'])
+def compare_song():
+    try:
+        for file in os.listdir(r"src\backend\audio\query"):
+            print(file)
+            query_dir = os.path.join(r"src\backend\audio\query", file)
+            res = handle_query_audio(query_dir) 
+
+            break
         
         #Sort
         # sorted_dict = dict(sorted(res.items(), key=lambda item: item[1]))
