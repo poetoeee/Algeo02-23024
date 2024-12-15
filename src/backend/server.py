@@ -140,8 +140,14 @@ def procces_song():
 @app.route("/api/compare_image", methods = ["POST"])
 def compare_image():
     try:
+        hum_folder = os.path.join(r"src\backend\image\query")
+        os.makedirs(hum_folder, exist_ok=True)
+
         query = request.files.get('file_image')
-        res = handle_query(query.filename)
+        query_dir = os.path.join(r"src\backend\image\query", query.filename)
+        query.save(query_dir)
+                
+        res = handle_query(query_dir)
 
         if not query:
             return jsonify({'error': 'No file uploaded'}), 400
