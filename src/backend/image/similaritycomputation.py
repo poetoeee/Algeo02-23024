@@ -22,6 +22,14 @@ def compute_similarity(query_image_path, dataset_projected_data, output_folder, 
     similarity_dict = {dataset_file_names[idx]: similarity_percentages[idx] for idx in range(len(dataset_file_names))}
     sorted_similarity_dict = {k: v for k, v in sorted(similarity_dict.items(), key=lambda item: item[1], reverse=True)}
 
+    if all(v < 0.65 for v in sorted_similarity_dict.values()):
+        print("No images have a similarity value above 0.65.")
+    else:
+        print("Images with similarity values above 0.65 (sorted by similarity):")
+        for filename, similarity in sorted_similarity_dict.items():
+            if similarity >= 0.65:
+                print(f"File: {filename}, Similarity: {similarity:.2f}")
+
     return sorted_similarity_dict
 
 """ buat testing
