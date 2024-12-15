@@ -4,9 +4,9 @@ from normalize import normalize_data_manually, save_normalized_data
 from pcasvd import compute_svd, project_data, save_data
 from similaritycomputation import compute_similarity
 
-def process_dataset(input_folder, output_folder, save_path):
+def process_dataset(input_folder, save_path):
     # bikin vektor
-    image_vectors = process_images(input_folder, output_folder, save_path)
+    image_vectors = process_images(input_folder, save_path)
     
     # normalize
     normalized_data, mean_vector = normalize_data_manually(image_vectors)
@@ -26,9 +26,9 @@ def handle_query(query_image_path):
 
 if __name__ == "__main__":
     dataset_folder = "dataset"
-    output_folder = "integfiles"
     save_path = "processed_data.npy"
 
-    process_dataset(dataset_folder, output_folder, save_path)
+
+    process_dataset(dataset_folder, save_path)
     query_image_path = "query.jpg"
     handle_query(query_image_path)
