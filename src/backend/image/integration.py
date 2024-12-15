@@ -1,4 +1,5 @@
 import numpy as np
+import os
 from image.vectorize import process_images
 from image.normalize import normalize_data_manually, save_normalized_data
 from image.pcasvd import compute_svd, project_data, save_data
@@ -22,13 +23,17 @@ def handle_query(query_image_path):
     dataset_projected_data = np.load("projected.npy")
 
     output_folder = "queryfolder"
-    compute_similarity(query_image_path, dataset_projected_data, output_folder, dataset_folder)
+    dataset_folder = os.path.join(r"src\backend\image\database_image")
+    
+    res = compute_similarity(query_image_path, dataset_projected_data, output_folder, dataset_folder)
+    return res
 
 if __name__ == "__main__":
-    dataset_folder = "dataset"
+    dataset_folder = os.path.join(r"src\backend\image\database_image")
+    # dataset_folder = "dataset"
     save_path = "processed_data.npy"
 
 
     process_dataset(dataset_folder, save_path)
     query_image_path = "query.jpg"
-    handle_query(query_image_path)
+    handle_query(r"src\backend\image\query\(1).jpg")
