@@ -113,6 +113,9 @@ def upload_query_song():
 ##search song
 @app.route("/api/compare_song", methods = ['POST'])
 def compare_song():
+    '''
+        return json of dictionary[name:kemiripan]
+    '''
     try:
         for file in os.listdir(r"src\backend\audio\query"):
             print(file)
@@ -179,6 +182,9 @@ def upload_query_image():
 #Search image
 @app.route("/api/compare_image", methods = ["POST"])
 def compare_image():
+    '''
+        return json of dictionary[name:kemiripan]
+    '''
     try:
         for file in os.listdir(r"src\backend\image\query"):
             print(file)
