@@ -88,9 +88,10 @@ def serve_image(filename):
 
     return send_from_directory(IMAGE_FOLDER, filename)
 
-
-@app.route("/api/upload_query", methods = ["POST"])
-def upload_query():
+#------------SONG------------#
+#upload song query
+@app.route("/api/upload_query_song", methods = ["POST"])
+def upload_query_song():
     try:
         hum_folder = os.path.join(r"src\backend\audio", "query")
         os.makedirs(hum_folder, exist_ok=True)
@@ -103,7 +104,7 @@ def upload_query():
         query_dir = os.path.join(r"src\backend\audio\query", query.filename)
 
         query.save(query_dir)
-        return jsonify({"message": "Song database processed successfully"})
+        return jsonify({"message": "Song querry uploaded successfully"})
 
     except Exception as e:
         return jsonify({'error' : str(e)}), 500
@@ -154,22 +155,37 @@ def procces_song():
     except Exception as e:
         return jsonify({'error' : str(e)}), 500
 
-
-#Search image
-@app.route("/api/compare_image", methods = ["POST"])
-def compare_image():
+#--------------IMAGE------------#
+#Upload query
+@app.route("/api/upload_query_image", methods = ["POST"])
+def upload_query_image():
     try:
         hum_folder = os.path.join(r"src\backend\image\query")
         os.makedirs(hum_folder, exist_ok=True)
 
         query = request.files.get('file_image')
         query_dir = os.path.join(r"src\backend\image\query", query.filename)
-        query.save(query_dir)
-                
-        res = handle_query(query_dir)
-
+        
         if not query:
             return jsonify({'error': 'No file uploaded'}), 400
+        
+        query.save(query_dir)
+        
+        return jsonify({"message": "Song querry uploaded successfully"})
+    
+    except Exception as e:
+        return jsonify({'error' : str(e)}), 500
+
+#Search image
+@app.route("/api/compare_image", methods = ["POST"])
+def compare_image():
+    try:
+        for file in os.listdir(r"src\backend\image\query"):
+            print(file)
+            query_dir = os.path.join(r"src\backend\image\query", file)
+            res = handle_query(query_dir)
+
+            break
         
         return jsonify(res)
     
@@ -177,7 +193,7 @@ def compare_image():
         return jsonify({'error' : str(e)}), 500
 
 
-##Upload database
+##Upload image database
 @app.route("/api/upload_image", methods= ["POST"])
 def procces_image():
     try:
