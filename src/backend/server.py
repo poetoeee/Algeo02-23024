@@ -2,6 +2,9 @@ from flask import Flask, jsonify, send_from_directory, request
 from flask_cors import CORS
 import os
 import json
+import zipfile
+from audio.main import handle_query_audio, procces_audio_db
+from image.integration import handle_query, process_dataset
 # import zipfile
 # from audio.main import handle_query_audio, procces_audio_db
 # from image.integration import handle_query, process_dataset
@@ -85,79 +88,79 @@ def serve_image(filename):
 
     return send_from_directory(IMAGE_FOLDER, filename)
 
-# @app.route("/api/compare_song", methods = ['POST'])
-# def compare_song():
-#     try:
+@app.route("/api/compare_song", methods = ['POST'])
+def compare_song():
+    try:
 
-#         query = request.files.get('file_song')
-#         res = handle_query_audio(query.filename)
+        query = request.files.get('file_song')
+        res = handle_query_audio(query.filename)
 
-#         if not query:
-#             return jsonify({'error': 'No file uploaded'}), 400
-#         return jsonify(res)
+        if not query:
+            return jsonify({'error': 'No file uploaded'}), 400
+        return jsonify(res)
     
-#     except Exception as e:
-#         return jsonify({'error' : str(e)}), 500
+    except Exception as e:
+        return jsonify({'error' : str(e)}), 500
 
-# @app.route("/api/upload_song", methods= ["POST"])
-# def procces_song():
-#     try:
-#         temp = os.path.join(r"src\backend\audio\temp")
-#         os.makedirs(temp, exist_ok=True)
-#         uploaded_file = request.files.get('file_song_db')
+@app.route("/api/upload_song", methods= ["POST"])
+def procces_song():
+    try:
+        temp = os.path.join(r"src\backend\audio\temp")
+        os.makedirs(temp, exist_ok=True)
+        uploaded_file = request.files.get('file_song_db')
 
-#         if not uploaded_file:
-#             return jsonify({'error': 'No file uploaded'}), 400
+        if not uploaded_file:
+            return jsonify({'error': 'No file uploaded'}), 400
         
-#         zip_path = os.path.join(r"src\backend\audio\temp", uploaded_file.filename)
-#         uploaded_file.save(zip_path)
+        zip_path = os.path.join(r"src\backend\audio\temp", uploaded_file.filename)
+        uploaded_file.save(zip_path)
 
-#         extracted = os.path.join(r"src\backend\audio\database_song")
-#         os.makedirs(extracted, exist_ok=True)
-#         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-#             zip_ref.extractall(extracted)
+        extracted = os.path.join(r"src\backend\audio\database_song")
+        os.makedirs(extracted, exist_ok=True)
+        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            zip_ref.extractall(extracted)
 
-#         procces_audio_db(path=extracted)
+        procces_audio_db(path=extracted)
 
-#         return jsonify({"message": "Song database processed successfully"})
-#     except Exception as e:
-#         return jsonify({'error' : str(e)}), 500
+        return jsonify({"message": "Song database processed successfully"})
+    except Exception as e:
+        return jsonify({'error' : str(e)}), 500
 
-# @app.route("/api/compare_image", methods = ["POST"])
-# def compare_image():
-#     try:
-#         query = request.files.get('file_image')
-#         res = handle_query(query.filename)
+@app.route("/api/compare_image", methods = ["POST"])
+def compare_image():
+    try:
+        query = request.files.get('file_image')
+        res = handle_query(query.filename)
 
-#         if not query:
-#             return jsonify({'error': 'No file uploaded'}), 400
+        if not query:
+            return jsonify({'error': 'No file uploaded'}), 400
         
-#         return jsonify(res)
+        return jsonify(res)
     
-#     except Exception as e:
-#         return jsonify({'error' : str(e)}), 500
+    except Exception as e:
+        return jsonify({'error' : str(e)}), 500
 
 
-# @app.route("/api/upload_image", methods= ["POST"])
-# def procces_image():
-#     try:
-#         temp = os.path.join(r"src\backend\image\temp")
-#         os.makedirs(temp, exist_ok=True)
-#         uploaded_file = request.files.get('file_image_db')
-#         if not uploaded_file:
-#             return jsonify({'error': 'No file uploaded'}), 400
+@app.route("/api/upload_image", methods= ["POST"])
+def procces_image():
+    try:
+        temp = os.path.join(r"src\backend\image\temp")
+        os.makedirs(temp, exist_ok=True)
+        uploaded_file = request.files.get('file_image_db')
+        if not uploaded_file:
+            return jsonify({'error': 'No file uploaded'}), 400
         
-#         zip_path = os.path.join(r"src\backend\image\temp", uploaded_file.filename)
-#         uploaded_file.save(zip_path)
-#         extracted = os.path.join(r"src\backend\image\db_tes")
-#         os.makedirs(extracted, exist_ok=True)
-#         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-#             zip_ref.extractall(extracted)
-#         process_dataset(extracted, "processed_data.npy")
-#         return jsonify({"message": "Image database processed successfully"})
+        zip_path = os.path.join(r"src\backend\image\temp", uploaded_file.filename)
+        uploaded_file.save(zip_path)
+        extracted = os.path.join(r"src\backend\image\db_tes")
+        os.makedirs(extracted, exist_ok=True)
+        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            zip_ref.extractall(extracted)
+        process_dataset(extracted, "processed_data.npy")
+        return jsonify({"message": "Image database processed successfully"})
     
-#     except Exception as e:
-#         return jsonify({'errornya' : str(e)}), 500
+    except Exception as e:
+        return jsonify({'errornya' : str(e)}), 500
 
 # ---------------------- MAIN ----------------------
 if __name__ == "__main__":
