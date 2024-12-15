@@ -1,18 +1,17 @@
-import midi_func as mf
+import audio.midi_func as mf
 import numpy as np
 import os
 import mido
 
-def main():
-    # mf.save_numpy_file()
+def handle_query_audio(query: str):
     res_dict = {}
     res = []
-    humm = mido.MidiFile(r"C:\Users\User\Algeo2\Algeo02-23024\src\backend\audio\humming\x (2).mid")
+    humm = mido.MidiFile(query)
 
     humm_windows = mf.create_windows(mf.divide_to_beat(humm))
 
-    # save_numpy_file()#create np file of window
-    d = np.load(r"C:\Users\User\Algeo2\Algeo02-23024\src\backend\audio\window_database.npy", allow_pickle=True).item()
+    dir = os.path.join(r"src/backend/audio/window_database.npy")
+    d = np.load(dir, allow_pickle=True).item()
     keys = list(d.keys())
 
     for key in keys:
@@ -52,15 +51,14 @@ def main():
                     res_song = avg_window
                         
 
-        print(f"hasil dengan {key}:",  avg_window)
         res_dict[key] = avg_window
 
     d2  = {k: v for k, v in sorted(res_dict.items(), key=lambda item: item[1], reverse=True)}
     for k in d2.keys():
-        print(f"{k}, {res_dict[k].item()}")
-    return res_dict
-            
+        print(f"{k}, {[k].item()}")
 
+    return d2
 
-main()
+def procces_audio_db(path):
 
+    mf.save_numpy_file(path)
