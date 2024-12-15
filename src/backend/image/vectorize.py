@@ -18,7 +18,7 @@ def resize(image, image2):
 
     return resized
 
-def process_images(input_folder, output_folder, save_path, size=(400, 400)): #output folder bekas testing
+def process_images(input_folder, save_path, size=(400, 400)): #output folder bekas testing
     #input folder -> input gambar, save_path -> output npy proses
     #os.makedirs(output_folder, exist_ok=True) tidak diperlukan, untuk testing awal saja
     image_vectors = []
