@@ -1,49 +1,66 @@
 import midi_func as mf
 import numpy as np
-from midi_func import save_numpy_file
-from midi_func import divide_to_beat
 import os
 import mido
-mid1 = mido.MidiFile(r"C:\Users\User\Algeo2\Algeo02-23024\src\backend\audio\database_song\midi_dataset\x (1).mid")
 
+def main():
+    # mf.save_numpy_file()
+    res_dict = {}
+    res = []
+    humm = mido.MidiFile(r"C:\Users\User\Algeo2\Algeo02-23024\src\backend\audio\humming\x (2).mid")
 
-segments = mf.divide_to_segment(divide_to_beat(mid1))
+    humm_windows = mf.create_windows(mf.divide_to_beat(humm))
 
-save_numpy_file()#create np file of window
-d = np.load(r"C:\Users\User\Algeo2\Algeo02-23024\src\backend\audio\window_database.npy", allow_pickle=True).item()
-keys = list(d.keys())
+    # save_numpy_file()#create np file of window
+    d = np.load(r"C:\Users\User\Algeo2\Algeo02-23024\src\backend\audio\window_database.npy", allow_pickle=True).item()
+    keys = list(d.keys())
 
-for key in keys:
-    res = 0
-    res_all = []
-    for window in d[key]:
-        if window != []:
-
-            for segment in segments:
-                h1, b1 = mf.atb_hist_time_measure(segment)
+    for key in keys:
+        res_song = 0
+        for humm_window in humm_windows:
+            for window in d[key]:
+                res_window = []
+                ###TIME MEASURE
+                h1, b1 = mf.atb_hist_time_measure(humm_window)
                 h2, b2 = mf.atb_hist_time_measure(window)
+                res_window.append(mf.compare(h1, h2))
 
-                res+= mf.compare(h1, h2)
-
-                h1, b1 = mf.rtb_hist_time_measure(segment)
-                h2, b2 = mf.rtb_hist_time_measure(window)
-
-                res+= mf.compare(h1, h2)
-
-                h1, b1 = mf.ftb_hist_time_measure(segment)
-                h2, b2 = mf.ftb_hist_time_measure(window)
-
-                res+= mf.compare(h1, h2)
                 
-                res /= 3
-                # print("res",)
+
+                h1, b1 = mf.rtb_hist_time_measure(humm_window)
+                h2, b2 = mf.rtb_hist_time_measure(window)
+                res_window.append(mf.compare(h1, h2))
+
+                
+                h1, b1 = mf.ftb_hist_time_measure(humm_window)
+                h2, b2 = mf.ftb_hist_time_measure(window)
+                res_window.append(mf.compare(h1, h2))
+
+                ###COUNT MEASURE
+                h1, b1 = mf.rtb_hist_count_measure([note for note, b in humm_window])
+                h2, b2 = mf.rtb_hist_count_measure([note for note, b in window])
+                res_window.append(mf.compare(h1, h2))
+
+                
+                h1, b1 = mf.ftb_hist_count_measure([note for note, b in humm_window])
+                h2, b2 = mf.ftb_hist_count_measure([note for note, b in window])
+                res_window.append(mf.compare(h1, h2))
+                
+                avg_window = sum(res_window)/len(res_window)
+
+                if avg_window > res_song:
+                    res_song = avg_window
+                        
+
+        print(f"hasil dengan {key}:",  avg_window)
+        res_dict[key] = avg_window
+
+    d2  = {k: v for k, v in sorted(res_dict.items(), key=lambda item: item[1], reverse=True)}
+    for k in d2.keys():
+        print(f"{k}, {res_dict[k].item()}")
+    return res_dict
+            
 
 
-                res_all.append(res)
-
-    print(f"hasil dengan {key}:",  np.average(res_all))
-
-        
-
-
+main()
 
