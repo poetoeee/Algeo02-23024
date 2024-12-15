@@ -13,7 +13,7 @@ def process_dataset(input_folder, save_path):
     save_normalized_data(normalized_data, mean_vector, "normalized_data.npy", "mean_vector.npy")
     
     # PCA
-    eigenvectors, singular_values = compute_svd(normalized_data, k=30) #k bisa diubah
+    eigenvectors, singular_values = compute_svd(normalized_data) #k bisa diubah
     projected_data = project_data(normalized_data, eigenvectors)
     save_data(projected_data, eigenvectors, singular_values)
     print("Dataset selesai diproses.")
