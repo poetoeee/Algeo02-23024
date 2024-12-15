@@ -3,8 +3,11 @@ import os
 from scipy.spatial.distance import cdist
 from preprocess_query import preprocess_query_image
 
-def compute_similarity(query_image_path, dataset_projected_data, output_folder):
-    # preprocess query dlu
+def compute_similarity(query_image_path, dataset_projected_data, output_folder, dataset_folder):
+    dataset_file_names = [f for f in os.listdir(dataset_folder) if os.path.isfile(os.path.join(dataset_folder, f))]
+    dataset_file_names.sort() 
+    
+    # Preprocess query dlu
     preprocess_query_image(query_image_path, output_folder, eigenvectors_path='eigenvectors.npy', 
                            mean_vector_path='mean_vector.npy')
     projected_query = np.load(os.path.join(output_folder, "projected_query.npy"))
@@ -14,17 +17,12 @@ def compute_similarity(query_image_path, dataset_projected_data, output_folder):
 
     # hitung persentase kemiripian (menggunakan max dan min)
     min_dist, max_dist = 0, distances.max()
-    similarity_percentages = (1 - (distances - min_dist) / (max_dist - min_dist)) * 100
+    similarity_percentages = (1 - (distances - min_dist) / (max_dist - min_dist))
 
-    similar_idx = np.where(similarity_percentages >= 65)[0]
-    sorted_idx = similar_idx[np.argsort(similarity_percentages[similar_idx])][::-1]
+    similarity_dict = {dataset_file_names[idx]: similarity_percentages[idx] for idx in range(len(dataset_file_names))}
+    sorted_similarity_dict = {k: v for k, v in sorted(similarity_dict.items(), key=lambda item: item[1], reverse=True)}
 
-    if len(sorted_idx) == 0:
-        print("Tidak ada gambar yang mirip.")
-    else:
-        print(f"gambar dengan kemiripan diatas 65% terurut dari yang tertinggi:")
-        for idx in sorted_idx:
-            print(f"Image Index: {idx}, Distance: {distances[idx]:.2f}, Similarity: {similarity_percentages[idx]:.2f}%")
+    return sorted_similarity_dict
 
 """ buat testing
     sorted_indices = np.argsort(distances)

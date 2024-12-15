@@ -22,7 +22,7 @@ def handle_query(query_image_path):
     dataset_projected_data = np.load("projected.npy")
 
     output_folder = "queryfolder"
-    compute_similarity(query_image_path, dataset_projected_data, output_folder)
+    compute_similarity(query_image_path, dataset_projected_data, output_folder, dataset_folder)
 
 if __name__ == "__main__":
     dataset_folder = "dataset"
