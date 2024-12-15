@@ -1,8 +1,8 @@
 import numpy as np
-from vectorize import process_images
-from normalize import normalize_data_manually, save_normalized_data
-from pcasvd import compute_svd, project_data, save_data
-from similaritycomputation import compute_similarity
+from image.vectorize import process_images
+from image.normalize import normalize_data_manually, save_normalized_data
+from image.pcasvd import compute_svd, project_data, save_data
+from image.similaritycomputation import compute_similarity
 
 def process_dataset(input_folder, save_path):
     # bikin vektor
@@ -13,7 +13,7 @@ def process_dataset(input_folder, save_path):
     save_normalized_data(normalized_data, mean_vector, "normalized_data.npy", "mean_vector.npy")
     
     # PCA
-    eigenvectors, singular_values = compute_svd(normalized_data, k=50) #k bisa diubah
+    eigenvectors, singular_values = compute_svd(normalized_data, k=30) #k bisa diubah
     projected_data = project_data(normalized_data, eigenvectors)
     save_data(projected_data, eigenvectors, singular_values)
     print("Dataset selesai diproses.")

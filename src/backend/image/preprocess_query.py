@@ -1,7 +1,7 @@
 import numpy as np
 from PIL import Image
-from vectorize import resize
-from pcasvd import project_data
+from image.vectorize import resize
+from image.pcasvd import project_data
 import os
 
 def preprocess_image(image_path, size=(400, 400)):

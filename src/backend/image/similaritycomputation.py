@@ -1,7 +1,7 @@
 import numpy as np
 import os
 from scipy.spatial.distance import cdist
-from preprocess_query import preprocess_query_image
+from image.preprocess_query import preprocess_query_image
 
 def compute_similarity(query_image_path, dataset_projected_data, output_folder, dataset_folder):
     dataset_file_names = [f for f in os.listdir(dataset_folder) if os.path.isfile(os.path.join(dataset_folder, f))]
