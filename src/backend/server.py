@@ -88,6 +88,8 @@ def serve_image(filename):
 
     return send_from_directory(IMAGE_FOLDER, filename)
 
+
+##search_button
 @app.route("/api/compare_song", methods = ['POST'])
 def compare_song():
     try:
@@ -113,6 +115,8 @@ def compare_song():
     except Exception as e:
         return jsonify({'error' : str(e)}), 500
 
+
+##Upload database song
 @app.route("/api/upload_song", methods= ["POST"])
 def procces_song():
     try:
@@ -137,6 +141,8 @@ def procces_song():
     except Exception as e:
         return jsonify({'error' : str(e)}), 500
 
+
+#Search image
 @app.route("/api/compare_image", methods = ["POST"])
 def compare_image():
     try:
@@ -158,6 +164,7 @@ def compare_image():
         return jsonify({'error' : str(e)}), 500
 
 
+##Upload database
 @app.route("/api/upload_image", methods= ["POST"])
 def procces_image():
     try:
