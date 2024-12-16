@@ -55,7 +55,7 @@ def handle_query_audio(query: str):
 
     d2  = {k: v for k, v in sorted(res_dict.items(), key=lambda item: item[1], reverse=True)}
     for k in d2.keys():
-        print(f"{k}, {[k].item()}")
+        print(f"{k}: {d2[k]}")
 
     return d2
 

@@ -249,13 +249,12 @@ def create_windows(events):
 
     return windows
 
-def save_numpy_file():
+def save_numpy_file(directory_in_str):
     '''
     Membuat file numpy berisikan dict (key= nama lagu, value = array of array of window)
     '''
-    current_directory = os.path.dirname(os.path.realpath(__file__))
-    directory_in_str = os.path.join(current_directory, "database_song", "midi_dataset")
     database = {}
+    current_directory = os.path.dirname(os.path.realpath(__file__))
 
     window_size = 20
     sliding_window = 4
