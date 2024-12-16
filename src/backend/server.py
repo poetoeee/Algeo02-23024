@@ -17,7 +17,7 @@ CORS(app)
 # Path Folder Dataset
 BASE_DIR = os.getcwd()
 AUDIO_FOLDER = os.path.join(BASE_DIR, "src", "backend", "audio", "database_song", "midi_dataset1")
-IMAGE_FOLDER = os.path.join(BASE_DIR, "src", "backend", "image", "database_image1")
+IMAGE_FOLDER = os.path.join(BASE_DIR, "src", "backend", "image", "db_tes")
 IMAGE_MAPPER_FILE = os.path.join(BASE_DIR, "src", "audio_image_map.json")
 
 # ---------------------- ROUTES ----------------------
@@ -220,6 +220,20 @@ def procces_image():
     
     except Exception as e:
         return jsonify({'errornya' : str(e)}), 500
+    
+@app.route("/api/play/<filename>", methods=["GET"])
+def serve_audio(filename):
+    """
+    Serves audio files for playback.
+    """
+    if not os.path.exists(AUDIO_FOLDER):
+        return jsonify({"error": "Audio folder not found"}), 404
+
+    if not os.path.exists(os.path.join(AUDIO_FOLDER, filename)):
+        return jsonify({"error": f"Audio file {filename} not found"}), 404
+
+    return send_from_directory(AUDIO_FOLDER, filename, mimetype="audio/midi")
+
 
 # ---------------------- MAIN ----------------------
 if __name__ == "__main__":
