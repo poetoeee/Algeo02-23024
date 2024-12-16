@@ -123,6 +123,7 @@ def compare_song():
         return json of dictionary[name:kemiripan]
     '''
     try:
+
         for file in os.listdir(r"src\backend\audio\query"):
             print(file)
             query_dir = os.path.join(r"src\backend\audio\query", file)
@@ -132,6 +133,10 @@ def compare_song():
         
         #Sort
         # sorted_dict = dict(sorted(res.items(), key=lambda item: item[1]))
+        song_res_json_dir = os.path.join(r"src\backend\audio\result\audio.json")
+        
+        with open(song_res_json_dir, 'w') as f:
+            json.dump(res, f)
 
         return jsonify(res)
     
@@ -144,6 +149,10 @@ def compare_song():
 def procces_song():
     try:
         temp = os.path.join(r"src\backend\audio\temp")
+        
+        if os.path.exists(temp) and os.path.isdir(temp):
+            shutil.rmtree(temp)
+            
         os.makedirs(temp, exist_ok=True)
         uploaded_file = request.files.get('file_song_db')
 
@@ -202,6 +211,12 @@ def compare_image():
             res = handle_query(query_dir)
 
             break
+
+        image_res_json_dir = os.path.join(r"src\backend\image\result\image.json")
+        
+        with open(image_res_json_dir, 'w') as f:
+            json.dump(res, f)
+
         
         return jsonify(res)
     
