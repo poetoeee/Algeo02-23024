@@ -185,7 +185,7 @@ def procces_song():
 @app.route("/api/upload_query_image", methods = ["POST"])
 def upload_query_image():
     try:
-        query_image_folder = os.path.join(r"src\backend\image\query")
+        query_image_folder = os.path.join(r"src\backend\image", "query")
         
         if os.path.exists(query_image_folder) and os.path.isdir(query_image_folder):
             shutil.rmtree(query_image_folder)
@@ -193,10 +193,10 @@ def upload_query_image():
         os.makedirs(query_image_folder, exist_ok=True)
 
         query = request.files.get('file_image')
-        query_dir = os.path.join(r"src\backend\image\query", query.filename)
-        
         if not query:
             return jsonify({'error': 'No file uploaded'}), 400
+        query_dir = os.path.join(r"src\backend\image\query", query.filename)
+        
         
         query.save(query_dir)
         
@@ -216,9 +216,10 @@ def compare_image():
             print(file)
             query_dir = os.path.join(r"src\backend\image\query", file)
             res = handle_query(query_dir)
+            print(res)
 
             break
-        
+        print("cek")
         image_res_json_dir = os.path.join(r"src\backend\image\result")
         res_dir = os.path.join(r"src\backend\image\result\image.json")
 
@@ -226,6 +227,7 @@ def compare_image():
             shutil.rmtree(image_res_json_dir)
 
         os.makedirs(image_res_json_dir)
+        print("makedir")
         
         with open(res_dir, 'w') as f:
             json.dump(res, f)
@@ -303,6 +305,9 @@ def upload_mapper():
 @app.route('/audio/result/audio.json')
 def get_audio_json():
     return send_from_directory(os.path.join(BASE_DIR, 'src', 'backend', 'audio', 'result'), 'audio.json')
+@app.route('/image/result/image.json')
+def get_image_json():
+    return send_from_directory(os.path.join(BASE_DIR, 'src', 'backend', 'image', 'result'), 'image.json')
 
 # ---------------------- MAIN ----------------------
 if __name__ == "__main__":
