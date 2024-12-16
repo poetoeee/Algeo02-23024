@@ -22,6 +22,16 @@ def get_notes(mid: MidiFile) -> list:
                 if msg.type == "note_on" and msg.velocity > 0:
                     notes.append(msg.note)
             return notes
+    
+    if notes == []:
+        for i, track in enumerate(mid.tracks):
+            if i == 0:
+                for msg in track:
+                    if msg.type == "note_on" and msg.velocity > 0:
+                        notes.append(msg.note)
+                print(notes)
+                return notes
+        
 
 def note_normalization(notes: list):
     '''normalize pitch of notes'''
@@ -165,6 +175,19 @@ def divide_to_beat(midi: MidiFile) -> list:
                         beat_count = msg.time / tpb #msg.time dihitung dalam tick
                         res.append((msg.note, beat_count))
             return res
+        
+    if res == []:#get first not empty track
+        print("ini")
+        for i, track in enumerate(midi.tracks):
+            if res == []:
+                print(midi.filename)
+                print(track.name)
+                for msg in track:
+                    if msg.type == "note_on" or msg.type == "note_off":
+                        if msg.time > 0:
+                            beat_count = msg.time / tpb #msg.time dihitung dalam tick
+                            res.append((msg.note, beat_count))
+                print(res)
         
     return res
 
