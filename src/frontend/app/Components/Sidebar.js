@@ -69,7 +69,7 @@ const Sidebar = () => {
     fileInputRef.current.click();
   };
 
-  const handleSearchClick = async () => {
+  const handleSearchAudioClick = async () => {
     try {
       const response = await fetch("http://127.0.0.1:8080/api/compare_song", {
         method: "POST",
@@ -84,6 +84,23 @@ const Sidebar = () => {
       }
     } catch (error) {
       console.error("Error comparing songs:", error);
+    }
+  };
+  const handleSearchImageClick = async () => {
+    try {
+      const response = await fetch("http://127.0.0.1:8080/api/compare_image", {
+        method: "POST",
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setCompareResult(result);
+        // console.log("Compare result:", result);
+      } else {
+        console.error("Failed to compare image:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error comparing image:", error);
     }
   };
 
@@ -106,10 +123,16 @@ const Sidebar = () => {
         </div>
 
         <button
-          onClick={handleSearchClick} // Sambungkan fungsi handleSearchClick
+          onClick={handleSearchAudioClick} // Sambungkan fungsi handleSearchClick
           className="w-full px-4 py-2 bg-white text-black font-bold rounded-lg hover:bg-green-900 hover:text-white mb-2"
         >
-          Search
+          Search Audio
+        </button>
+        <button
+          onClick={handleSearchImageClick} // Sambungkan fungsi handleSearchClick
+          className="w-full px-4 py-2 bg-white text-black font-bold rounded-lg hover:bg-green-900 hover:text-white mb-2"
+        >
+          Search Image
         </button>
       </div>
 
