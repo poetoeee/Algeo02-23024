@@ -48,6 +48,7 @@ def process_images(input_folder, save_path, size=(400, 400)): #output folder bek
 
     # Save ke npy
     image_vectors = np.array(image_vectors)
+    
     np.save(save_path, image_vectors)
     print(f"data proses disave ke: {save_path}")
     return image_vectors

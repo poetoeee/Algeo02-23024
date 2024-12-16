@@ -19,16 +19,15 @@ def compute_similarity(query_image_path, dataset_projected_data, output_folder, 
     min_dist, max_dist = 0, distances.max()
     similarity_percentages = (1 - (distances - min_dist) / (max_dist - min_dist))
 
-    similarity_dict = {dataset_file_names[idx]: similarity_percentages[idx] for idx in range(len(dataset_file_names))}
-    sorted_similarity_dict = {k: v for k, v in sorted(similarity_dict.items(), key=lambda item: item[1], reverse=True)}
+    similarity_dict = {dataset_file_names[idx]: similarity_percentages[idx] 
+                        for idx in range(len(dataset_file_names)) 
+                        if similarity_percentages[idx] >= 0.65}
 
-    if all(v < 0.65 for v in sorted_similarity_dict.values()):
-        print("No images have a similarity value above 0.65.")
-    else:
-        print("Images with similarity values above 0.65 (sorted by similarity):")
-        for filename, similarity in sorted_similarity_dict.items():
-            if similarity >= 0.65:
-                print(f"File: {filename}, Similarity: {similarity:.2f}")
+    if not similarity_dict:
+        top_3_indices = np.argsort(similarity_percentages)[-3:][::-1]
+        similarity_dict = {dataset_file_names[idx]: similarity_percentages[idx] for idx in top_3_indices}
+
+    sorted_similarity_dict = {k: v for k, v in sorted(similarity_dict.items(), key=lambda item: item[1], reverse=True)}
 
     return sorted_similarity_dict
 

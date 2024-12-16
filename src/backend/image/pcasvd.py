@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.sparse.linalg import svds
 
-def compute_svd(data, k=None, fraction = 0.5, max_k = 100): #data - normalized data, k yang dikeep
+def compute_svd(data, k=None, fraction = 0.5, max_k = 50): #data - normalized data, k yang dikeep
 
     num_images = data.shape[0]
     if k is None:
