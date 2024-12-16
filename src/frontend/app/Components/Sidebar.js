@@ -17,6 +17,7 @@ const Sidebar = () => {
     Images: "-",
     Mapper: "-",
   });
+  const [compareResult, setCompareResult] = useState(null); // Menyimpan hasil compare
   const fileInputRef = useRef(null);
   const currentUploadTypeRef = useRef(null);
 
@@ -68,6 +69,24 @@ const Sidebar = () => {
     fileInputRef.current.click();
   };
 
+  const handleSearchClick = async () => {
+    try {
+      const response = await fetch("http://127.0.0.1:8080/api/compare_song", {
+        method: "POST",
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setCompareResult(result);
+        // console.log("Compare result:", result);
+      } else {
+        console.error("Failed to compare songs:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error comparing songs:", error);
+    }
+  };
+
   return (
     <div className="w-1/5 h-screen bg-gray-900 text-white p-10 flex flex-col">
       <h1 className="text-5xl font-bold mb-10">HOREG 2.0</h1>
@@ -86,8 +105,26 @@ const Sidebar = () => {
           </button>
         </div>
 
-        <button className="w-full px-4 py-2 bg-white text-black font-bold rounded-lg hover:bg-green-900 hover:text-white mb-2">Search</button>
+        <button
+          onClick={handleSearchClick} // Sambungkan fungsi handleSearchClick
+          className="w-full px-4 py-2 bg-white text-black font-bold rounded-lg hover:bg-green-900 hover:text-white mb-2"
+        >
+          Search
+        </button>
       </div>
+
+      {compareResult && (
+        <div className="bg-gray-800 p-4 rounded mt-5">
+          <h3 className="text-lg font-bold mb-3">Compare Result</h3>
+          <ul className="list-disc ml-5">
+            {Object.entries(compareResult).map(([song, similarity]) => (
+              <li key={song}>
+                {song}: {similarity}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <ul className="list-none space-y-4 mb-10 mt-20">
         {uploadOptions

@@ -11,7 +11,7 @@ const SongCard = ({ song, onPlayPause, isAudioPlaying }) => {
 
       <div className="p-4">
         <p className="font-bold truncate">{song.name}</p>
-        <p className="text-gray-400 text-sm">Similarity: {song.kemiripan}%</p>
+        <p className="text-gray-400 text-sm">Similarity: {(song.kemiripan * 100).toFixed(2)}%</p>
       </div>
 
       <button onClick={() => onPlayPause(song)} className="absolute bottom-5 right-5 bg-white text-green-700 px-3 py-2 rounded-full hover:bg-green-600 hover:text-white">
@@ -24,6 +24,7 @@ const SongCard = ({ song, onPlayPause, isAudioPlaying }) => {
 const SongList = () => {
   const [songs, setSongs] = useState([]);
   const [imageMapping, setImageMapping] = useState([]);
+  const [similarityMapping, setSimilarityMapping] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -36,6 +37,23 @@ const SongList = () => {
   const progressRef = useRef(null);
 
   const itemsPerPage = 18;
+
+  useEffect(() => {
+    const fetchSimilarityMapping = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8080/audio/result/audio.json");
+        if (!response.ok) {
+          throw new Error("Failed to fetch similarity mapping");
+        }
+        const data = await response.json();
+        setSimilarityMapping(data);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    fetchSimilarityMapping();
+  }, []);
 
   // Fetch image mapping from backend
   useEffect(() => {
@@ -70,7 +88,7 @@ const SongList = () => {
           return {
             id: index + 1,
             name: songFileName,
-            kemiripan: "0",
+            kemiripan: similarityMapping[songFileName] || 0,
             imageUrl: imageMappingItem ? imageMappingItem.image_url : "",
           };
         });
@@ -83,8 +101,10 @@ const SongList = () => {
       }
     };
 
-    fetchSongs();
-  }, [imageMapping]);
+    if (Object.keys(similarityMapping).length > 0 && imageMapping.length > 0) {
+      fetchSongs();
+    }
+  }, [similarityMapping, imageMapping]);
 
   const handlePlayPause = (song) => {
     if (currentPlayingSong?.name === song.name) {

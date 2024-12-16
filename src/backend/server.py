@@ -19,8 +19,8 @@ CORS(app)
 BASE_DIR = os.getcwd()
 AUDIO_FOLDER = os.path.join(BASE_DIR, "src", "backend", "audio", "database_song")
 AUDIO_RES_JSON = os.path.join(BASE_DIR, r"src\backend\audio\result\audio.json")
-IMAGE_FOLDER = os.path.join(BASE_DIR, "src", "backend", "image", "database_image")
-IMAGE_MAPPER_FILE = os.path.join(BASE_DIR, "src", "backend", "mapper", "audio_image_map.json")
+IMAGE_FOLDER = os.path.join(BASE_DIR, "src", "backend", "image", "db_tes")
+IMAGE_MAPPER_FILE = os.path.join(BASE_DIR, "src", "audio_image_map.json")
 IMAGE_RES_JSON = os.path.join(BASE_DIR, r"src\backend\image\result\image.json")
 
 # ---------------------- ROUTES ----------------------
@@ -299,6 +299,10 @@ def upload_mapper():
     
     except Exception as e:
         return jsonify({'error' : str(e)}), 500
+    
+@app.route('/audio/result/audio.json')
+def get_audio_json():
+    return send_from_directory(os.path.join(BASE_DIR, 'src', 'backend', 'audio', 'result'), 'audio.json')
 
 # ---------------------- MAIN ----------------------
 if __name__ == "__main__":
