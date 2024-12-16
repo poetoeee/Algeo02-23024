@@ -21,7 +21,7 @@ BASE_DIR = os.getcwd()
 AUDIO_FOLDER = os.path.join(BASE_DIR, "src", "backend", "audio", "database_song")
 AUDIO_RES_JSON = os.path.join(BASE_DIR, r"src\backend\audio\result\audio.json")
 IMAGE_FOLDER = os.path.join(BASE_DIR, "src", "backend", "image", "database_image")
-IMAGE_MAPPER_FILE = os.path.join(BASE_DIR, "src", "audio_image_map.json")
+IMAGE_MAPPER_FILE = os.path.join(BASE_DIR, "src", "backend", "mapper", "audio_image_map.json")
 IMAGE_RES_JSON = os.path.join(BASE_DIR, r"src\backend\image\result\image.json")
 
 # ---------------------- ROUTES ----------------------
@@ -49,6 +49,22 @@ def get_audios():
 
     return jsonify({"songs": audio_files})
 
+@app.route("/api/imagess", methods=["GET"])
+def get_imagess():
+    """
+    Returns a list of audio files from the audio folder.
+    """
+    if not os.path.exists(IMAGE_FOLDER):
+        return jsonify({"error": "Image folder not found"}), 404
+
+    image_files = [
+        f for f in os.listdir(IMAGE_FOLDER)
+        if f.lower().endswith(('.jpg', '.jpeg', '.png'))
+    ]
+
+    return jsonify({"images": image_files})
+
+
 # 3. Route Images List Based on Mapper
 @app.route("/api/images", methods=["GET"])
 def get_images():
@@ -68,7 +84,7 @@ def get_images():
     data = [
         {
             "audio_file": entry.get("audio_file"),
-            "image_url": f"/api/image/{entry.get('pic_name')}"
+            "image_url": entry.get('pic_name')
         }
         for entry in mapper
     ]
@@ -331,6 +347,12 @@ def upload_mapper():
 @app.route('/audio/result/audio.json')
 def get_audio_json():
     return send_from_directory(os.path.join(BASE_DIR, 'src', 'backend', 'audio', 'result'), 'audio.json')
+@app.route('/image/result/image.json')
+def get_image_json():
+    return send_from_directory(os.path.join(BASE_DIR, 'src', 'backend', 'image', 'result'), 'image.json')
+@app.route('/mapper/audio_image_map.json')
+def get_mapper_json():
+    return send_from_directory(os.path.join(BASE_DIR, 'src', 'backend', 'mapper'), 'audio_image_map.json')
 
 # ---------------------- MAIN ----------------------
 if __name__ == "__main__":

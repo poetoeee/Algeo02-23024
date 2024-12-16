@@ -6,10 +6,10 @@ const uploadOptions = [
   { type: "Image", endpoint: "/api/upload_query_image", accept: ".jpg,.jpeg,.png", field: "file_image" },
   { type: "Audios", endpoint: "/api/upload_song", accept: ".zip", field: "file_song_db" },
   { type: "Images", endpoint: "/api/upload_image", accept: ".zip", field: "file_image_db" },
-  { type: "Mapper", accept: ".json" },
+  { type: "Mapper", endpoint: "/api/upload_mapper", accept: ".json", field: "file_mapper" },
 ];
 
-const Sidebar = () => {
+const Sidebar = ({ setLastSearch }) => {
   const [selectedFiles, setSelectedFiles] = useState({
     Audio: "-",
     Image: "-",
@@ -70,6 +70,7 @@ const Sidebar = () => {
   };
 
   const handleSearchAudioClick = async () => {
+    setLastSearch("audio");
     try {
       const response = await fetch("http://127.0.0.1:8080/api/compare_song", {
         method: "POST",
@@ -87,6 +88,7 @@ const Sidebar = () => {
     }
   };
   const handleSearchImageClick = async () => {
+    setLastSearch("image");
     try {
       const response = await fetch("http://127.0.0.1:8080/api/compare_image", {
         method: "POST",
@@ -138,14 +140,7 @@ const Sidebar = () => {
 
       {compareResult && (
         <div className="bg-gray-800 p-4 rounded mt-5">
-          <h3 className="text-lg font-bold mb-3">Compare Result</h3>
-          <ul className="list-disc ml-5">
-            {Object.entries(compareResult).map(([song, similarity]) => (
-              <li key={song}>
-                {song}: {similarity}
-              </li>
-            ))}
-          </ul>
+          <h3 className="text-lg font-bold mb-3">Compare Berhasil, Silahkan Refresh Halaman!</h3>
         </div>
       )}
 
