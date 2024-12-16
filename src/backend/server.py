@@ -6,6 +6,7 @@ import json
 import zipfile
 from audio.main import handle_query_audio, procces_audio_db
 from image.integration import handle_query, process_dataset
+import time
 # import zipfile
 # from audio.main import handle_query_audio, procces_audio_db
 # from image.integration import handle_query, process_dataset
@@ -124,7 +125,9 @@ def compare_song():
     '''
         return json of dictionary[name:kemiripan]
     '''
+    print("Comparing...")
     try:
+        start_time = time.time()
 
         for file in os.listdir(r"src\backend\audio\query"):
             print(file)
@@ -142,9 +145,21 @@ def compare_song():
             shutil.rmtree(song_res_json_dir)
         os.makedirs(song_res_json_dir)
         
+        
+
         with open(res_dir, 'w') as f:
             json.dump(res, f)
 
+
+        time_dir = os.path.join(song_res_json_dir, "time.json")
+        delta_time = time.time() - start_time
+        time_dict = {"time":str(delta_time)}
+
+        print("Time: {:.2f}".format(delta_time), end="\n")
+        
+        with open(time_dir, 'w') as f:
+            json.dump(time_dict, f)
+        
         return jsonify(res)
     
     except Exception as e:
@@ -185,7 +200,7 @@ def procces_song():
 @app.route("/api/upload_query_image", methods = ["POST"])
 def upload_query_image():
     try:
-        query_image_folder = os.path.join(r"src\backend\image", "query")
+        query_image_folder = os.path.join(r"src\backend\image\query")
         
         if os.path.exists(query_image_folder) and os.path.isdir(query_image_folder):
             shutil.rmtree(query_image_folder)
@@ -193,10 +208,10 @@ def upload_query_image():
         os.makedirs(query_image_folder, exist_ok=True)
 
         query = request.files.get('file_image')
-        if not query:
-            return jsonify({'error': 'No file uploaded'}), 400
         query_dir = os.path.join(r"src\backend\image\query", query.filename)
         
+        if not query:
+            return jsonify({'error': 'No file uploaded'}), 400
         
         query.save(query_dir)
         
@@ -212,14 +227,14 @@ def compare_image():
         return json of dictionary[name:kemiripan]
     '''
     try:
+        start_time = time.time()
+
         for file in os.listdir(r"src\backend\image\query"):
             print(file)
             query_dir = os.path.join(r"src\backend\image\query", file)
             res = handle_query(query_dir)
-            print(res)
 
             break
-
         
         image_res_json_dir = os.path.join(r"src\backend\image\result")
         res_dir = os.path.join(r"src\backend\image\result\image.json")
@@ -228,8 +243,20 @@ def compare_image():
             shutil.rmtree(image_res_json_dir)
 
         os.makedirs(image_res_json_dir)
+        
         with open(res_dir, 'w') as f:
             json.dump(res, f)
+
+
+
+        time_dir = os.path.join(image_res_json_dir, "time.json")
+        delta_time = time.time() - start_time
+        time_dict = {"time":str(delta_time)}
+
+        print("Time: {:.2f}".format(delta_time), end="\n")
+        
+        with open(time_dir, 'w') as f:
+            json.dump(time_dict, f)
         
         return jsonify(res)
     
@@ -304,9 +331,6 @@ def upload_mapper():
 @app.route('/audio/result/audio.json')
 def get_audio_json():
     return send_from_directory(os.path.join(BASE_DIR, 'src', 'backend', 'audio', 'result'), 'audio.json')
-@app.route('/image/result/image.json')
-def get_image_json():
-    return send_from_directory(os.path.join(BASE_DIR, 'src', 'backend', 'image', 'result'), 'image.json')
 
 # ---------------------- MAIN ----------------------
 if __name__ == "__main__":
