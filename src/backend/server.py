@@ -133,9 +133,14 @@ def compare_song():
         
         #Sort
         # sorted_dict = dict(sorted(res.items(), key=lambda item: item[1]))
-        song_res_json_dir = os.path.join(r"src\backend\audio\result\audio.json")
+        song_res_json_dir = os.path.join(r"src\backend\audio\result")
+        res_dir = os.path.join(r"src\backend\audio\result\audio.json")
+
+        if os.path.exists(song_res_json_dir) and os.path.isdir(song_res_json_dir):
+            shutil.rmtree(song_res_json_dir)
+        os.makedirs(song_res_json_dir)
         
-        with open(song_res_json_dir, 'w') as f:
+        with open(res_dir, 'w') as f:
             json.dump(res, f)
 
         return jsonify(res)
@@ -211,12 +216,17 @@ def compare_image():
             res = handle_query(query_dir)
 
             break
-
-        image_res_json_dir = os.path.join(r"src\backend\image\result\image.json")
         
-        with open(image_res_json_dir, 'w') as f:
-            json.dump(res, f)
+        image_res_json_dir = os.path.join(r"src\backend\image\result")
+        res_dir = os.path.join(r"src\backend\image\result\image.json")
 
+        if os.path.exists(image_res_json_dir) and os.path.isdir(image_res_json_dir):
+            shutil.rmtree(image_res_json_dir)
+
+        os.makedirs(image_res_json_dir)
+        
+        with open(res_dir, 'w') as f:
+            json.dump(res, f)
         
         return jsonify(res)
     
