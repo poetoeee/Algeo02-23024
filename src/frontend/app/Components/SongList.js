@@ -33,9 +33,28 @@ const SongList = ({ lastSearch }) => {
   const [audio, setAudio] = useState(null);
   const [volume, setVolume] = useState(0.5);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [executionTime, setExecutionTime] = useState(null);
   const progressRef = useRef(null);
 
   const itemsPerPage = 18;
+
+  useEffect(() => {
+    const fetchExecutionTime = async () => {
+      try {
+        const response = await fetch(`http://127.0.0.1:8080/${lastSearch}/result/time.json`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch execution time");
+        }
+        const data = await response.json();
+        setExecutionTime(data.time);
+      } catch (err) {
+        console.error("Error fetching execution time:", err);
+        setExecutionTime(null);
+      }
+    };
+
+    fetchExecutionTime();
+  }, [lastSearch]);
 
   useEffect(() => {
     const fetchSimilarityMapping = async () => {
@@ -217,6 +236,12 @@ const SongList = ({ lastSearch }) => {
           Next
         </button>
       </div>
+
+      {executionTime && (
+        <div className="text-center text-gray-600 mt-6">
+          <p>Execution Time: {parseFloat(executionTime).toFixed(2)} seconds</p>
+        </div>
+      )}
 
       {currentPlayingItem && (
         <div className="fixed bottom-0 left-0 w-full bg-gray-700 text-white p-4 flex justify-between items-center">

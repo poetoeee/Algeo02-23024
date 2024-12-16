@@ -353,6 +353,12 @@ def get_image_json():
 @app.route('/mapper/audio_image_map.json')
 def get_mapper_json():
     return send_from_directory(os.path.join(BASE_DIR, 'src', 'backend', 'mapper'), 'audio_image_map.json')
+@app.route('/audio/result/time.json')
+def get_time_json_audio():
+    return send_from_directory(os.path.join(BASE_DIR, 'src', 'backend', 'audio', 'result'), 'time.json')
+@app.route('/image/result/time.json')
+def get_time_json_image():
+    return send_from_directory(os.path.join(BASE_DIR, 'src', 'backend', 'image', 'result'), 'time.json')
 
 # ---------------------- MAIN ----------------------
 if __name__ == "__main__":

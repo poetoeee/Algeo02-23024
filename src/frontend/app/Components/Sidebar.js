@@ -108,9 +108,9 @@ const Sidebar = ({ setLastSearch }) => {
 
   return (
     <div className="w-1/5 h-screen bg-gray-900 text-white p-10 flex flex-col">
-      <h1 className="text-5xl font-bold mb-10">HOREG 2.0</h1>
+      <h1 className="text-5xl font-bold mb-5">HOREG 2.0</h1>
 
-      <div className="bg-gray-800 p-4 rounded mt-10 mb-15">
+      <div className="bg-gray-800 p-4 rounded mt-5 mb-5">
         <h3 className="text-lg font-bold mb-3">Upload Options</h3>
 
         <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
@@ -139,12 +139,12 @@ const Sidebar = ({ setLastSearch }) => {
       </div>
 
       {compareResult && (
-        <div className="bg-gray-800 p-4 rounded mt-5">
-          <h3 className="text-lg font-bold mb-3">Compare Berhasil, Silahkan Refresh Halaman!</h3>
+        <div className="bg-gray-800 p-4 rounded">
+          <h3 className="text-lg font-bold">Compare Berhasil, Silahkan Refresh Halaman!</h3>
         </div>
       )}
 
-      <ul className="list-none space-y-4 mb-10 mt-20">
+      <ul className="list-none space-y-4 mb-5 mt-5">
         {uploadOptions
           .filter((option) => option.type !== "Audio" && option.type !== "Image")
           .map((option) => (
