@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, send_from_directory, request
 from flask_cors import CORS
+import shutil
 import os
 import json
 import zipfile
@@ -93,8 +94,13 @@ def serve_image(filename):
 @app.route("/api/upload_query_song", methods = ["POST"])
 def upload_query_song():
     try:
-        hum_folder = os.path.join(r"src\backend\audio", "query")
-        os.makedirs(hum_folder, exist_ok=True)
+
+        query_song_folder = os.path.join(r"src\backend\audio", "query")
+        
+        if os.path.exists(query_song_folder) and os.path.isdir(query_song_folder):
+            shutil.rmtree(query_song_folder)
+        
+        os.makedirs(query_song_folder, exist_ok=True)
 
         query = request.files.get('file_song')
         
@@ -163,8 +169,12 @@ def procces_song():
 @app.route("/api/upload_query_image", methods = ["POST"])
 def upload_query_image():
     try:
-        hum_folder = os.path.join(r"src\backend\image\query")
-        os.makedirs(hum_folder, exist_ok=True)
+        query_image_folder = os.path.join(r"src\backend\image\query")
+        
+        if os.path.exists(query_image_folder) and os.path.isdir(query_image_folder):
+            shutil.rmtree(query_image_folder)
+            
+        os.makedirs(query_image_folder, exist_ok=True)
 
         query = request.files.get('file_image')
         query_dir = os.path.join(r"src\backend\image\query", query.filename)
@@ -174,7 +184,7 @@ def upload_query_image():
         
         query.save(query_dir)
         
-        return jsonify({"message": "Song querry uploaded successfully"})
+        return jsonify({"message": "Image querry uploaded successfully"})
     
     except Exception as e:
         return jsonify({'error' : str(e)}), 500
@@ -211,7 +221,7 @@ def procces_image():
         
         zip_path = os.path.join(r"src\backend\image\temp", uploaded_file.filename)
         uploaded_file.save(zip_path)
-        extracted = os.path.join(r"src\backend\image\db_tes")
+        extracted = os.path.join(r"src\backend\image\database_image")
         os.makedirs(extracted, exist_ok=True)
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
             zip_ref.extractall(extracted)
@@ -234,7 +244,10 @@ def serve_audio(filename):
 
     return send_from_directory(AUDIO_FOLDER, filename, mimetype="audio/midi")
 
-
+#-------------MAPPER-----------
+@app.route("/api/upload_mapper", methods= ["POST"])
+def upload_mapper():
+    
 # ---------------------- MAIN ----------------------
 if __name__ == "__main__":
     app.run(debug=True, port=8080)
