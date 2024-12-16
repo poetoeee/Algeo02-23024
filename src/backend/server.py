@@ -17,8 +17,8 @@ CORS(app)
 
 # Path Folder Dataset
 BASE_DIR = os.getcwd()
-AUDIO_FOLDER = os.path.join(BASE_DIR, "src", "backend", "audio", "database_song", "midi_dataset1")
-IMAGE_FOLDER = os.path.join(BASE_DIR, "src", "backend", "image", "db_tes")
+AUDIO_FOLDER = os.path.join(BASE_DIR, "src", "backend", "audio", "database_song")
+IMAGE_FOLDER = os.path.join(BASE_DIR, "src", "backend", "image", "database_image")
 IMAGE_MAPPER_FILE = os.path.join(BASE_DIR, "src", "backend", "mapper", "audio_image_map.json")
 
 # ---------------------- ROUTES ----------------------
