@@ -19,7 +19,7 @@ CORS(app)
 BASE_DIR = os.getcwd()
 AUDIO_FOLDER = os.path.join(BASE_DIR, "src", "backend", "audio", "database_song", "midi_dataset1")
 IMAGE_FOLDER = os.path.join(BASE_DIR, "src", "backend", "image", "db_tes")
-IMAGE_MAPPER_FILE = os.path.join(BASE_DIR, "src", "audio_image_map.json")
+IMAGE_MAPPER_FILE = os.path.join(BASE_DIR, "src", "backend", "mapper", "audio_image_map.json")
 
 # ---------------------- ROUTES ----------------------
 
@@ -247,7 +247,27 @@ def serve_audio(filename):
 #-------------MAPPER-----------
 @app.route("/api/upload_mapper", methods= ["POST"])
 def upload_mapper():
+    try:
+        mapper_dir = os.path.join(r"src\backend\mapper")
+        
+        if os.path.exists(mapper_dir) and os.path.isdir(mapper_dir):
+            shutil.rmtree(mapper_dir)
+            
+        os.makedirs(mapper_dir, exist_ok=True)
+
+        query = request.files.get('file_mapper')
+        mapper_dir = os.path.join(r"src\backend\mapper", "audio_image_map.json")
+        
+        if not query:
+            return jsonify({'error': 'No file uploaded'}), 400
+        
+        query.save(mapper_dir)
+        
+        return jsonify({"message": "Mapper uploaded successfully"})
     
+    except Exception as e:
+        return jsonify({'error' : str(e)}), 500
+
 # ---------------------- MAIN ----------------------
 if __name__ == "__main__":
     app.run(debug=True, port=8080)
