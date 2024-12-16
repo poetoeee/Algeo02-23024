@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.sparse.linalg import svds
+import os
 
 def compute_svd(data, k=None, fraction = 0.5, max_k = 50): #data - normalized data, k yang dikeep
 
@@ -30,10 +31,10 @@ def project_data(data, eigenvectors):
     return np.dot(data, eigenvectors)
 
 def save_data(projected_data, eigenvectors, singular_values):
-    np.save("projected.npy", projected_data)
-    np.save("eigenvectors.npy", eigenvectors)
-    np.save("svd.npy", singular_values)
-
+    custom_path = r"src\backend\image\processing"
+    np.save(os.path.join(custom_path, "projected.npy"), projected_data)
+    np.save(os.path.join(custom_path, "eigenvectors.npy"), eigenvectors)
+    np.save(os.path.join(custom_path, "svd.npy"), singular_values)
 
 
 if __name__ == "__main__":

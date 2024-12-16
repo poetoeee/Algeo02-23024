@@ -1,4 +1,5 @@
 import numpy as np
+import os
 
 def normalize_data_manually(image_data):
     # jumlah gambar
@@ -11,8 +12,9 @@ def normalize_data_manually(image_data):
     return normalized_data, mean_vector
 
 def save_normalized_data(normalized_data, mean_vector, data_file, mean_file):
-    np.save(data_file, normalized_data)
-    np.save(mean_file, mean_vector)
+    custom_path = r"src\backend\image\processing"
+    np.save(os.path.join(custom_path, data_file), normalized_data)
+    np.save(os.path.join(custom_path, mean_file), mean_vector)
     print(f"normalized data disave ke: {data_file}")
     print(f"Mean vector disave ke: {mean_file}")
 

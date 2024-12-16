@@ -20,9 +20,9 @@ def process_dataset(input_folder, save_path):
     print("Dataset selesai diproses.")
 
 def handle_query(query_image_path):
-    dataset_projected_data = np.load("projected.npy")
+    dataset_projected_data = np.load(r"src\backend\image\processing\projected.npy")
 
-    output_folder = "queryfolder"
+    output_folder = r"src\backend\image\queryfolder"
     dataset_folder = os.path.join(r"src\backend\image\database_image")
     
     res = compute_similarity(query_image_path, dataset_projected_data, output_folder, dataset_folder)
