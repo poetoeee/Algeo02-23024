@@ -177,18 +177,13 @@ def divide_to_beat(midi: MidiFile) -> list:
             return res
         
     if res == []:#get first not empty track
-        print("ini")
         for i, track in enumerate(midi.tracks):
             if res == []:
-                print(midi.filename)
-                print(track.name)
                 for msg in track:
                     if msg.type == "note_on" or msg.type == "note_off":
                         if msg.time > 0:
                             beat_count = msg.time / tpb #msg.time dihitung dalam tick
-                            res.append((msg.note, beat_count))
-                print(res)
-        
+                            res.append((msg.note, beat_count))        
     return res
 
 def divide_to_segment(events: list):
