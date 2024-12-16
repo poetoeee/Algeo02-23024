@@ -229,14 +229,19 @@ def compare_image():
 def procces_image():
     try:
         temp = os.path.join(r"src\backend\image\temp")
+        extracted = os.path.join(r"src\backend\image\database_image")
+
+        if os.path.exists(extracted) and os.path.isdir(extracted):
+            shutil.rmtree(extracted)
+
         os.makedirs(temp, exist_ok=True)
         uploaded_file = request.files.get('file_image_db')
+
         if not uploaded_file:
             return jsonify({'error': 'No file uploaded'}), 400
         
         zip_path = os.path.join(r"src\backend\image\temp", uploaded_file.filename)
         uploaded_file.save(zip_path)
-        extracted = os.path.join(r"src\backend\image\database_image")
         os.makedirs(extracted, exist_ok=True)
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
             zip_ref.extractall(extracted)
