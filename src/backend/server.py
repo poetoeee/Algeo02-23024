@@ -19,7 +19,7 @@ CORS(app)
 BASE_DIR = os.getcwd()
 AUDIO_FOLDER = os.path.join(BASE_DIR, "src", "backend", "audio", "database_song")
 AUDIO_RES_JSON = os.path.join(BASE_DIR, r"src\backend\audio\result\audio.json")
-IMAGE_FOLDER = os.path.join(BASE_DIR, "src", "backend", "image", "db_tes")
+IMAGE_FOLDER = os.path.join(BASE_DIR, "src", "backend", "image", "database_image")
 IMAGE_MAPPER_FILE = os.path.join(BASE_DIR, "src", "audio_image_map.json")
 IMAGE_RES_JSON = os.path.join(BASE_DIR, r"src\backend\image\result\image.json")
 
@@ -218,6 +218,7 @@ def compare_image():
             res = handle_query(query_dir)
 
             break
+
         
         image_res_json_dir = os.path.join(r"src\backend\image\result")
         res_dir = os.path.join(r"src\backend\image\result\image.json")
@@ -226,7 +227,6 @@ def compare_image():
             shutil.rmtree(image_res_json_dir)
 
         os.makedirs(image_res_json_dir)
-        
         with open(res_dir, 'w') as f:
             json.dump(res, f)
         

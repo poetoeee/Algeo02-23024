@@ -52,12 +52,15 @@ def handle_query_audio(query: str):
                         
 
         res_dict[key] = avg_window
+    
 
     d2  = {k: v for k, v in sorted(res_dict.items(), key=lambda item: item[1], reverse=True)}
+    limited_res = {}
     for k in d2.keys():
-        print(f"{k}: {d2[k]}")
+        if d2[k] > 0.7:
+            limited_res[k] = d2[k]
 
-    return d2
+    return limited_res
 
 def procces_audio_db(path):
 
