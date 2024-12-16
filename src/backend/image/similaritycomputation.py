@@ -8,8 +8,8 @@ def compute_similarity(query_image_path, dataset_projected_data, output_folder, 
     dataset_file_names.sort() 
     
     # Preprocess query dlu
-    preprocess_query_image(query_image_path, output_folder, eigenvectors_path='eigenvectors.npy', 
-                           mean_vector_path='mean_vector.npy')
+    preprocess_query_image(query_image_path, output_folder, eigenvectors_path=r'src\backend\image\processing\eigenvectors.npy', 
+                           mean_vector_path=r'src\backend\image\processing\mean_vector.npy')
     projected_query = np.load(os.path.join(output_folder, "projected_query.npy"))
 
     # hitung jarak
