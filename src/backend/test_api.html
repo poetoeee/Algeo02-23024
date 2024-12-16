@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test API</title>
+  </head>
+  <body>
+    <h1>API Test Interface</h1>
+
+    <!-- Song Database Upload -->
+    <label for="songDatabase">Upload Song Database (ZIP):</label>
+    <input type="file" id="songDatabase" />
+    <button onclick="uploadSongDatabase()">Upload Song Database</button>
+    <br /><br />
+
+    <!-- Image Database Upload -->
+    <label for="imageDatabase">Upload Image Database (ZIP):</label>
+    <input type="file" id="imageDatabase" />
+    <button onclick="uploadImageDatabase()">Upload Image Database</button>
+    <br /><br />
+
+    <!-- Song Query Upload -->
+    <label for="songQuery">Upload Song Query (MIDI):</label>
+    <input type="file" id="songQuery" />
+    <button onclick="uploadSongQuery()">Upload Song Query</button>
+    <br /><br />
+
+    <!-- Image Query Upload -->
+    <label for="imageQuery">Upload Image Query (Image):</label>
+    <input type="file" id="imageQuery" />
+    <button onclick="uploadImageQuery()">Upload Image Query</button>
+    <br /><br />
+
+    <!-- Compare Song -->
+    <button onclick="compareSong()">Compare Song Query</button>
+    <br /><br />
+
+    <!-- Compare Image -->
+    <button onclick="compareImage()">Compare Image Query</button>
+    <br /><br />
+
+    <script>
+      const API_BASE_URL = "http://localhost:8080/api";
+
+      // Upload Song Database
+      async function uploadSongDatabase() {
+        const fileInput = document.getElementById("songDatabase");
+        if (fileInput.files.length === 0) {
+          alert("Please select a file.");
+          return;
+        }
+        const formData = new FormData();
+        formData.append("file_song_db", fileInput.files[0]);
+
+        try {
+          const response = await fetch(`${API_BASE_URL}/upload_song`, {
+            method: "POST",
+            body: formData,
+          });
+          const result = await response.json();
+          alert(`Response: ${JSON.stringify(result)}`);
+        } catch (error) {
+          console.error("Error uploading song database:", error);
+          alert("Failed to upload song database.");
+        }
+      }
+
+      // Upload Image Database
+      async function uploadImageDatabase() {
+        const fileInput = document.getElementById("imageDatabase");
+        if (fileInput.files.length === 0) {
+          alert("Please select a file.");
+          return;
+        }
+        const formData = new FormData();
+        formData.append("file_image_db", fileInput.files[0]);
+
+        try {
+          const response = await fetch(`${API_BASE_URL}/upload_image`, {
+            method: "POST",
+            body: formData,
+          });
+          const result = await response.json();
+          alert(`Response: ${JSON.stringify(result)}`);
+        } catch (error) {
+          console.error("Error uploading image database:", error);
+          alert("Failed to upload image database.");
+        }
+      }
+
+      // Upload Song Query
+      async function uploadSongQuery() {
+        const fileInput = document.getElementById("songQuery");
+        if (fileInput.files.length === 0) {
+          alert("Please select a file.");
+          return;
+        }
+        const formData = new FormData();
+        formData.append("file_song", fileInput.files[0]);
+
+        try {
+          const response = await fetch(`${API_BASE_URL}/upload_query_song`, {
+            method: "POST",
+            body: formData,
+          });
+          const result = await response.json();
+          alert(`Response: ${JSON.stringify(result)}`);
+        } catch (error) {
+          console.error("Error uploading song query:", error);
+          alert("Failed to upload song query.");
+        }
+      }
+
+      // Upload Image Query
+      async function uploadImageQuery() {
+        const fileInput = document.getElementById("imageQuery");
+        if (fileInput.files.length === 0) {
+          alert("Please select a file.");
+          return;
+        }
+        const formData = new FormData();
+        formData.append("file_image", fileInput.files[0]);
+
+        try {
+          const response = await fetch(`${API_BASE_URL}/upload_query_image`, {
+            method: "POST",
+            body: formData,
+          });
+          const result = await response.json();
+          alert(`Response: ${JSON.stringify(result)}`);
+        } catch (error) {
+          console.error("Error uploading image query:", error);
+          alert("Failed to upload image query.");
+        }
+      }
+
+      // Compare Song Query
+      async function compareSong() {
+        try {
+          const response = await fetch(`${API_BASE_URL}/compare_song`, {
+            method: "POST",
+          });
+          const result = await response.json();
+          alert(`Comparison Result: ${JSON.stringify(result)}`);
+        } catch (error) {
+          console.error("Error comparing song query:", error);
+          alert("Failed to compare song query.");
+        }
+      }
+
+      // Compare Image Query
+      async function compareImage() {
+        try {
+          const response = await fetch(`${API_BASE_URL}/compare_image`, {
+            method: "POST",
+          });
+          const result = await response.json();
+          alert(`Comparison Result: ${JSON.stringify(result)}`);
+        } catch (error) {
+          console.error("Error comparing image query:", error);
+          alert("Failed to compare image query.");
+        }
+      }
+    </script>
+  </body>
+</html>
