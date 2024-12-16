@@ -37,7 +37,7 @@ def create_midi(pitches, times, onset_times, midi_file="output.mid"):
     midi.tracks.append(track)
     
     # Add a tempo event (set to 120 BPM as an example)
-    track.append(mido.MetaMessage('set_tempo', tempo=120))
+    track.append(mido.MetaMessage('set_tempo', tempo=mido.bpm2tempo(120, (4,4,))))
     
     prev_time = 0
     
@@ -49,8 +49,8 @@ def create_midi(pitches, times, onset_times, midi_file="output.mid"):
         midi_note = freq_to_midi(pitch)
         
         # Calculate the time delta between the previous onset and the current one
-        time_delta = int(mido.second2tick(time - prev_time,96, 120))  # Convert time difference to frames
-        
+        time_delta = int(mido.second2tick(time - prev_time, 480, mido.bpm2tempo(120, (4,4,))))  # Convert time difference to frames
+        # print("time:", time_delta)
         # Add 'note_on' event at the current time
         track.append(mido.Message('note_on', note=midi_note, velocity=64, time=time_delta))
 
@@ -62,7 +62,7 @@ def create_midi(pitches, times, onset_times, midi_file="output.mid"):
             duration_time = 0.5
         
         # Convert the duration from seconds to MIDI ticks
-        note_duration = int(librosa.time_to_frames(duration_time))  # Duration in frames
+        note_duration = int(mido.second2tick(duration_time, 480, mido.bpm2tempo(120, (4,4,))))  # Duration in frames
         note_duration = note_duration  # Duration in frames
         
         # Add 'note_off' event with calculated duration
@@ -84,17 +84,20 @@ def create_midi(pitches, times, onset_times, midi_file="output.mid"):
 # create_midi(pitches, times, onset_times, "output.mid")  # Create the MIDI file
 
 
-# mid2 = mido.MidiFile(r"src\backend\audio\query\x (11).mid")
+mid2 = mido.MidiFile(r"src\backend\audio\query\x (11).mid")
 
 
-# for i, track in enumerate(mid2.tracks):
-#         # print("tick: ", mid2.ticks_per_beat)
-#         # print('Track {}: {}'.format(i, track.name))
-#         for msg in track:
-#             # print(msg.type)
-#             if msg.type == 'note_off':
-#                 print(msg)
+for i, track in enumerate(mid2.tracks):
+        print("tick: ", mid2.ticks_per_beat)
+        # print('Track {}: {}'.format(i, track.name))
+        for msg in track:
+            # print(msg.type)
+            if msg.type == 'note_off' or msg.type == 'note_on':
+                print(msg)
 
-
+print("done")
+print("done")
+print("done")
+print("done")
 pitches, times, onset_times = extract_pitch(r"C:\Users\User\Downloads\11_voice.wav")
 create_midi(pitches, times, onset_times, midi_file=r"C:\Users\User\Downloads\11_voice.mid")
