@@ -149,9 +149,10 @@ def compare_song():
 def procces_song():
     try:
         temp = os.path.join(r"src\backend\audio\temp")
+        extracted = os.path.join(r"src\backend\audio\database_song")
         
-        if os.path.exists(temp) and os.path.isdir(temp):
-            shutil.rmtree(temp)
+        if os.path.exists(extracted) and os.path.isdir(extracted):
+            shutil.rmtree(extracted)
             
         os.makedirs(temp, exist_ok=True)
         uploaded_file = request.files.get('file_song_db')
@@ -162,7 +163,6 @@ def procces_song():
         zip_path = os.path.join(r"src\backend\audio\temp", uploaded_file.filename)
         uploaded_file.save(zip_path)
 
-        extracted = os.path.join(r"src\backend\audio\database_song")
         os.makedirs(extracted, exist_ok=True)
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
             zip_ref.extractall(extracted)
