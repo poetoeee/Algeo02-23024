@@ -32,7 +32,6 @@ Proyek ini bertujuan untuk membuat aplikasi yang dapat mencari kemiripan antara 
    - Backend:
      ```bash
      python src/backend/server.py
-     npm run dev
      ```
    - Frontend:
      ```bash
